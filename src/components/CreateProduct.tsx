@@ -19,7 +19,7 @@ const CreateProduct = ({ products, setProductsCallback }: { products: Product[],
 
     return (
         <>
-            {state && <CostumAlert type={state?.success ? "success" : "danger"} message={state?.msg as string} showClose={true} show={show} setShow={setShow} />}
+            {state && !isPending && <CostumAlert type={state?.success ? "success" : "danger"} message={state?.msg as string} showClose={true} show={show} setShow={setShow} />}
             <Form noValidate validated={validated} action={submitAction}>
                 <Row>
                     <Col className="col-4">

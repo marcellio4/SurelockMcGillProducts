@@ -8,7 +8,15 @@ main {
 }
 
 .card-img-fit {
-  width: fit-content;
+  width: 100%;
+}
+
+.carousel-control-prev-icon {
+  background-color: black;
+}
+
+.carousel-control-next-icon {
+  background-color: black;
 }
 
 

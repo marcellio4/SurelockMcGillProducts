@@ -26,8 +26,6 @@ const Main = () => {
         })
     }, [])
 
-    console.log(deleteProducts)
-
     return (
         <CostumContainer componentBody={
             <section className="mt-5">

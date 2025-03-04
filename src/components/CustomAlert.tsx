@@ -1,10 +1,18 @@
+import { useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 
 const CostumAlert = ({ type, message, showClose, show, setShow }: { type: string, message: string, showClose?: boolean, show: boolean, setShow: any }) => {
+    const [autoClose, setAutoClose] = useState(true);
+
+    useEffect(() => {
+        setTimeout(() => {
+            setAutoClose(false)
+        }, 3000);
+    }, [])
 
     if (show && !showClose) {
         return (
-            <Alert key={type} variant={type}>
+            <Alert className="mx-auto my-auto" show={autoClose} key={type} variant={type}>
                 {message}
             </Alert>
         )

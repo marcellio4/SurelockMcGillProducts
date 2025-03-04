@@ -3,7 +3,7 @@ import { ProductService } from "../service/ProductService";
 
 export const productService = new ProductService();
 
-const validateProductFields = (product: { [k: string]: any; }, setPriceValidation: any, setQuantityValidation: any, setNameValidation: any) => {
+const validateMandatoryProductFields = (product: { [k: string]: any; }, setPriceValidation: any, setQuantityValidation: any, setNameValidation: any) => {
     if (!product.name) {
         setNameValidation(true);
         return {
@@ -23,6 +23,7 @@ const validateProductFields = (product: { [k: string]: any; }, setPriceValidatio
     }
 
     if (!parseFloat(product.quantity)) {
+        console.log("product quantity", product.quantity);
         setQuantityValidation(true);
         return {
             success: false,
@@ -34,9 +35,14 @@ const validateProductFields = (product: { [k: string]: any; }, setPriceValidatio
     return { success: true };
 }
 
+const isValidUrls = (urls: string[]) => {
+    if (urls.length === 0) return;
+    urls.forEach(url => new URL(url));
+}
+
 export const addProduct = (products: Product[], setProducts: any, setValidated: any, setPriceValidation: any, setQuantityValidation: any, setNameValidation: any) => async (previousState: any, formData: any) => {
     const product = (Object.fromEntries(formData.entries()))
-    const isValidated = validateProductFields(product, setPriceValidation, setQuantityValidation, setNameValidation);
+    const isValidated = validateMandatoryProductFields(product, setPriceValidation, setQuantityValidation, setNameValidation);
     if (!isValidated.success) {
         return isValidated;
     }
@@ -91,4 +97,40 @@ export const deleteProducts = async (ids: number[], setProducts: any, setAlert: 
     }
 
     return;
+}
+
+export const updateProduct = (productId: number, setPriceValidation: any, setQuantityValidation: any, setNameValidation: any, setValidated: any) => async (previousState: any, formData: any) => {
+    const product = (Object.fromEntries(formData.entries()))
+    const isValidated = validateMandatoryProductFields(product, setPriceValidation, setQuantityValidation, setNameValidation);
+
+    if (!isValidated.success) {
+        return isValidated;
+    }
+    product.image_urls = product.image_urls.split(',').map((url: string) => url.trim()).filter((url: string) => url !== '');
+    try {
+        isValidUrls(product.image_urls);
+    } catch (error) {
+        return {
+            success: false,
+            msg: "You have entered invalid image url.",
+            product: null
+        }
+    }
+    product.is_active = !product.is_active ? false : true;
+    product.id = productId;
+    const response = await productService.updateProduct(product as Product);
+    setValidated(false);
+    if (response.length > 0) {
+        return {
+            success: true,
+            msg: "Your product was succesfuly Updated.",
+            product: response[0]
+        }
+    }
+
+    return {
+        success: false,
+        msg: "Something went wrong we could not add new Product.",
+        product: null
+    }
 }

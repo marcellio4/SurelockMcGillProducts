@@ -11,8 +11,7 @@ const handleOnChecked = (checked: boolean, setDeleteProducts: any, deleteProduct
         setDeleteProducts(newDeletedProducts);
         return;
     }
-
-    newDeletedProducts = deleteProducts.filter(n => n !== productId);
+    
     setDeleteProducts(deleteProducts.filter(p => p !== productId));
     return;
 }
