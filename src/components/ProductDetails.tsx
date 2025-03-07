@@ -86,7 +86,7 @@ const ProductDetails = () => {
                                     </Card.Text>
                                 </Card.Body>
                                 <Card.Footer>
-                                    <small className="text-muted">{product.price ? "In -Stock" : "Out-of-Stock"}</small>
+                                    <small className="text-muted">{!product.is_active || product.quantity === 0 ? "Out-of-Stock" : "In -Stock" }</small>
                                 </Card.Footer>
                             </Card>
                         </Col>
